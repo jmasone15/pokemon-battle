@@ -1,10 +1,46 @@
 const formEl = document.getElementById("form");
 
+// Create Pokemon Function
 formEl.addEventListener("submit", async function(event) {
+    // Prevent the page from refreshing
     event.preventDefault();
-    const data = await (await fetch("https://pokeapi.co/api/v2/pokemon/" + event.target.children[1].value)).json();
-    console.log(data);
+
+    // Both the api fetch and the to json are promises, need to do two awaits.
+    const apiData = await callApi("pokemon/" + event.target.children[1].value);
+    
+    console.log(apiData);
+
+    let typeArray = [];
+    let moveArray = [];
+
+    apiData.types.forEach(t => {
+        typeArray.push(t.type.name)
+    });
+
+    const pokeAbility = await callApi(null, apiData.abilities[0].ability.url);
+    const abilityEffect = pokeAbility.effect_entries.filter(a => {
+        return a.language.name === "en"
+    });
+
+    const userPokemon = new Pokemon(
+        apiData.id,
+        apiData.name,
+        50,
+        typeArray,
+        new Ability(pokeAbility.id, pokeAbility.name, abilityEffect[0].short_effect)
+    )
+
+    console.log(userPokemon);
+
 });
+
+async function callApi(string, fullstring) {
+    if(!fullstring) {
+        return await (await fetch("https://pokeapi.co/api/v2/" + string)).json();
+    } else {
+        return await (await fetch(fullstring)).json();
+    }
+};
 
 
 function init() {
@@ -33,3 +69,5 @@ function init() {
 };
 
 init();
+
+// Bracket Keys, semicolon, Up Down arrow

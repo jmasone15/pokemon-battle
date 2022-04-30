@@ -1,8 +1,7 @@
 class Pokemon {
-    constructor(id, name, description, level, types, ability, stats, moves) {
+    constructor(id, name, level, types, ability, stats, moves) {
         this.id = id;
         this.name = name;
-        this.description = description;
         this.level = level;
         this.types = types;
         this.ability = ability;
@@ -52,10 +51,9 @@ class MoveMetaData {
 }
 
 class Ability {
-    constructor(id, name, description, effect) {
+    constructor(id, name, effect) {
         this.id = id;
         this.name = name;
-        this.description = description;
         this.effect = effect;
     }
 }
