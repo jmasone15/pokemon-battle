@@ -27,7 +27,15 @@ formEl.addEventListener("submit", async function(event) {
         apiData.name,
         50,
         typeArray,
-        new Ability(pokeAbility.id, pokeAbility.name, abilityEffect[0].short_effect)
+        new Ability(pokeAbility.id, pokeAbility.name, abilityEffect[0].short_effect),
+        new Stats(
+            apiData.stats[0].base_stat, 
+            apiData.stats[1].base_stat, 
+            apiData.stats[2].base_stat, 
+            apiData.stats[3].base_stat, 
+            apiData.stats[4].base_stat, 
+            apiData.stats[5].base_stat
+        )
     )
 
     console.log(userPokemon);

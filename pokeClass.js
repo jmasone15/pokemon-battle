@@ -10,10 +10,14 @@ class Pokemon {
     }
 }
 
-class Stat {
-    constructor(name, value) {
-        this.name = name;
-        this.value = value
+class Stats {
+    constructor(hp, attack, defense, special_attack, special_defense, speed) {
+        this.hp = hp;
+        this.attack = attack;
+        this.defense = defense;
+        this.special_attack = special_attack;
+        this.special_defense = special_defense;
+        this.speed = speed;
     }
 }
 
