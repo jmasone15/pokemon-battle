@@ -1,27 +1,35 @@
 const formEl = document.getElementById("form");
 
 // Create Pokemon Function
-formEl.addEventListener("submit", async function(event) {
+formEl.addEventListener("submit", async function (event) {
     // Prevent the page from refreshing
     event.preventDefault();
+    const pokemon = await buildPokemon(await callApi("pokemon/" + event.target.children[1].value));
+    console.log(pokemon);
+});
 
-    // Both the api fetch and the to json are promises, need to do two awaits.
-    const apiData = await callApi("pokemon/" + event.target.children[1].value);
-    
-    console.log(apiData);
+async function callApi(string, fullstring) {
+    if (!fullstring) {
+        return await (await fetch("https://pokeapi.co/api/v2/" + string)).json();
+    } else {
+        return await (await fetch(fullstring)).json();
+    }
+};
 
+async function buildPokemon(apiData) {
+    // Type Loop
     let typeArray = [];
-    let moveArray = [];
-
     apiData.types.forEach(t => {
         typeArray.push(t.type.name)
     });
 
+    // Ability Finder
     const pokeAbility = await callApi(null, apiData.abilities[0].ability.url);
     const abilityEffect = pokeAbility.effect_entries.filter(a => {
         return a.language.name === "en"
     });
 
+    // Build the Pokemon
     const userPokemon = new Pokemon(
         apiData.id,
         apiData.name,
@@ -29,43 +37,75 @@ formEl.addEventListener("submit", async function(event) {
         typeArray,
         new Ability(pokeAbility.id, pokeAbility.name, abilityEffect[0].short_effect),
         new Stats(
-            apiData.stats[0].base_stat, 
-            apiData.stats[1].base_stat, 
-            apiData.stats[2].base_stat, 
-            apiData.stats[3].base_stat, 
-            apiData.stats[4].base_stat, 
+            apiData.stats[0].base_stat,
+            apiData.stats[1].base_stat,
+            apiData.stats[2].base_stat,
+            apiData.stats[3].base_stat,
+            apiData.stats[4].base_stat,
             apiData.stats[5].base_stat
-        )
+        ),
+        await getPokeMoves(apiData.moves)
     )
 
-    console.log(userPokemon);
+    return userPokemon;
+}
 
-});
+async function getPokeMoves(array) {
+    let moves = [];
+    for (let i = 0; i < 4; i++) {
+        let moveData = await callApi(null, array[Math.floor(Math.random() * array.length)].move.url);
+        let moveEffect = moveData.effect_entries.filter(m => {
+            return m.language.name === "en"
+        });
+        moves.push(
+            new Move(
+                moveData.id,
+                moveData.name,
+                moveEffect[0].short_effect,
+                moveData.type.name,
+                moveData.damage_class.name,
+                moveData.accuracy,
+                moveData.power,
+                moveData.pp,
+                moveData.priority,
+                moveData.target.name,
+                new MoveMetaData(
+                    moveData.meta.ailment.name,
+                    moveData.meta.ailment_chance,
+                    moveData.meta.category.name,
+                    moveData.meta.crit_rate,
+                    moveData.meta.drain,
+                    moveData.meta.flinch_chance,
+                    moveData.meta.healing,
+                    moveData.meta.max_hits,
+                    moveData.meta.max_turns,
+                    moveData.meta.min_hits,
+                    moveData.meta.min_turns,
+                    moveData.meta.stat_chance
+                )
+            )
+        );
+    };
 
-async function callApi(string, fullstring) {
-    if(!fullstring) {
-        return await (await fetch("https://pokeapi.co/api/v2/" + string)).json();
-    } else {
-        return await (await fetch(fullstring)).json();
-    }
+    return moves;
 };
 
 
 function init() {
 
     // Pokemon Creation
-    
+
 
     // Create function to prompt the user to select their pokemon
-        // Start with one and move on to select more pokemon
+    // Start with one and move on to select more pokemon
 
     // Build computer teams, maybe gym leaders?
-        // Could start out with Brock
+    // Could start out with Brock
 
     // Fight functionality:
     // Looping function that continues to run while both teams are alive
     // User selects move | Computer selects move
-        // Will eventually have a computer AI that chooses smart moves or increased stats
+    // Will eventually have a computer AI that chooses smart moves or increased stats
     // Determine turn based on speed or moves or abilities
     // Execute move function
     // Repeat until any pokemon faints.
