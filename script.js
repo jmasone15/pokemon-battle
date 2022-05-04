@@ -5,6 +5,7 @@ formEl.addEventListener("submit", async function (event) {
     // Prevent the page from refreshing
     event.preventDefault();
     const pokemon = await buildPokemon(await callApi("pokemon/" + event.target.children[1].value));
+    event.target.children[1].value = "";
     console.log(pokemon);
 });
 
@@ -28,6 +29,7 @@ async function buildPokemon(apiData) {
     const abilityEffect = pokeAbility.effect_entries.filter(a => {
         return a.language.name === "en"
     });
+    console.log(apiData);
 
     // Build the Pokemon
     const userPokemon = new Pokemon(
@@ -52,46 +54,95 @@ async function buildPokemon(apiData) {
 
 async function getPokeMoves(array) {
     let moves = [];
-    for (let i = 0; i < 4; i++) {
-        let moveData = await callApi(null, array[Math.floor(Math.random() * array.length)].move.url);
-        let moveEffect = moveData.effect_entries.filter(m => {
-            return m.language.name === "en"
-        });
-        moves.push(
-            new Move(
-                moveData.id,
-                moveData.name,
-                moveEffect[0].short_effect,
-                moveData.type.name,
-                moveData.damage_class.name,
-                moveData.accuracy,
-                moveData.power,
-                moveData.pp,
-                moveData.priority,
-                moveData.target.name,
-                new MoveMetaData(
-                    moveData.meta.ailment.name,
-                    moveData.meta.ailment_chance,
-                    moveData.meta.category.name,
-                    moveData.meta.crit_rate,
-                    moveData.meta.drain,
-                    moveData.meta.flinch_chance,
-                    moveData.meta.healing,
-                    moveData.meta.max_hits,
-                    moveData.meta.max_turns,
-                    moveData.meta.min_hits,
-                    moveData.meta.min_turns,
-                    moveData.meta.stat_chance
-                )
-            )
-        );
-    };
 
+    // Some Pokemon (Like Ditto) only have a few possible moves
+    if (array.length < 4) {
+        for (let i = 0; i < array.length; i++) {
+            let moveData = await callApi(null, array[Math.floor(Math.random() * array.length)].move.url);
+            let moveEffect = moveData.effect_entries.filter(m => {
+                return m.language.name === "en"
+            });
+            moves.push(
+                new Move(
+                    moveData.id,
+                    moveData.name,
+                    moveEffect[0].short_effect,
+                    moveData.type.name,
+                    moveData.damage_class.name,
+                    moveData.accuracy,
+                    moveData.power,
+                    moveData.pp,
+                    moveData.priority,
+                    moveData.target.name,
+                    new MoveMetaData(
+                        moveData.meta.ailment.name,
+                        moveData.meta.ailment_chance,
+                        moveData.meta.category.name,
+                        moveData.meta.crit_rate,
+                        moveData.meta.drain,
+                        moveData.meta.flinch_chance,
+                        moveData.meta.healing,
+                        moveData.meta.max_hits,
+                        moveData.meta.max_turns,
+                        moveData.meta.min_hits,
+                        moveData.meta.min_turns,
+                        moveData.meta.stat_chance
+                    )
+                )
+            );
+        }
+    } else {
+        // Prevent the while loop from going on forever by having a count
+        let count = 0;
+
+        while (moves.length < 4 && count < 20) {
+
+            // Don't add duplicate moves
+            let existingMoveIds = moves.map(x => x.id);
+            let moveData = await callApi(null, array[Math.floor(Math.random() * array.length)].move.url);
+            
+            if (moveData.damage_class.name !== "physical" || existingMoveIds.includes(moveData.id)) {
+                count++;
+            } else {
+                let moveEffect = moveData.effect_entries.filter(m => {
+                    return m.language.name === "en"
+                });
+                moves.push(
+                    new Move(
+                        moveData.id,
+                        moveData.name,
+                        moveEffect[0].short_effect,
+                        moveData.type.name,
+                        moveData.damage_class.name,
+                        moveData.accuracy,
+                        moveData.power,
+                        moveData.pp,
+                        moveData.priority,
+                        moveData.target.name,
+                        new MoveMetaData(
+                            moveData.meta.ailment.name,
+                            moveData.meta.ailment_chance,
+                            moveData.meta.category.name,
+                            moveData.meta.crit_rate,
+                            moveData.meta.drain,
+                            moveData.meta.flinch_chance,
+                            moveData.meta.healing,
+                            moveData.meta.max_hits,
+                            moveData.meta.max_turns,
+                            moveData.meta.min_hits,
+                            moveData.meta.min_turns,
+                            moveData.meta.stat_chance
+                        )
+                    )
+                );
+            }
+        }
+    }
     return moves;
 };
 
 
-function init() {
+// function init() {
 
     // Pokemon Creation
 
@@ -114,8 +165,6 @@ function init() {
     // Determine winner
     // Ask to play again
 
-};
+// };
 
-init();
-
-// Bracket Keys, semicolon, Up Down arrow
+// init();
