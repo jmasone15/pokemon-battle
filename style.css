@@ -16,7 +16,31 @@
 }
 
 .pokeDiv li {
-    border: 3px solid red;
+    border: 3px solid green;
     margin: 5px;
     padding: 3px;
+    min-width: 100px;
+}
+
+.liDiv {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.closeBtn {
+    cursor: pointer;
+    font-size: 25px;
+    font-weight: bold;
+    color: rgb(238, 91, 91);
+    width: min-content;
+    height: min-content;
+}
+
+.closeBtn:after {
+    content: "\00d7";
+}
+
+.closeBtn:hover {
+    transform: scale(1.1);
 }

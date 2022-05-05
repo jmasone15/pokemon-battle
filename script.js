@@ -175,6 +175,7 @@ async function getPokeMoves(array) {
     return moves;
 };
 
+// Need to rework to only update new or removed values
 function updatePage() {
 
     // Remove existing Pokemon from page
@@ -184,11 +185,32 @@ function updatePage() {
 
     // Add Pokemon to page
     for (let i = 0; i < pokeTeam.length; i++) {
+        const newDiv = document.createElement("div");
+        newDiv.setAttribute("class", "liDiv");
+        listEl.appendChild(newDiv);
+
         const newLi = document.createElement("li");
         newLi.textContent = pokeTeam[i].name.charAt(0).toUpperCase() + pokeTeam[i].name.slice(1);
-        listEl.appendChild(newLi);
+        newDiv.appendChild(newLi);
+
+        const newCloseBtn = document.createElement("div");
+        newCloseBtn.setAttribute("class", "closeBtn");
+        newCloseBtn.setAttribute("id", pokeTeam[i].id);
+        newCloseBtn.addEventListener("click", removePokemon);
+        newDiv.appendChild(newCloseBtn);
     }
 };
+
+function removePokemon(event) {
+
+    // Remove the Pokemon from the HTML
+    const deleteDiv = event.target.parentElement;
+    deleteDiv.parentElement.removeChild(deleteDiv);
+
+    // Remove the Pokemon from the pokeTeam array
+    const pokeTeamIds = pokeTeam.map(poke => poke.id);
+    pokeTeam.splice(pokeTeamIds.indexOf(Math.floor(event.target.getAttribute("id"))), 1);
+}
 
 
 // function init() {
