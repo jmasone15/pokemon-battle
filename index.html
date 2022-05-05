@@ -4,18 +4,21 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="https://rsms.me/inter/inter.css">
+    <link rel="stylesheet" href="./style.css">
     <title>Pokemon Battle</title>
 </head>
 <body>
-    <div>
+    <div class="container">
         <h1>Pokemon Battle Sim!</h1>
-        <form id="form">
-            <label for="pokemon">Select a Pokemon: </label>
-            <input name="pokemon" id="input" type="text">
-            <button type="submit">Search</button>
-        </form>
+        <div class="pokeDiv">
+            <form id="form">
+                <label for="pokemon">Select a Pokemon: </label>
+                <input name="pokemon" id="input" type="text">
+                <button type="submit">Search</button>
+            </form>
+            <ul id="list"></ul>
+        </div>
+        <!-- Add section where you can click on a selected pokemon and see their stats. -->
     </div>
 
     <script src="pokeClass.js"></script>

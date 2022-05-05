@@ -1,0 +1,22 @@
+.container {
+    text-align: center;
+}
+
+.pokeDiv {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    
+}
+
+.pokeDiv ul {
+    display: flex;
+    flex-direction: column;
+    list-style: none;
+}
+
+.pokeDiv li {
+    border: 3px solid red;
+    margin: 5px;
+    padding: 3px;
+}

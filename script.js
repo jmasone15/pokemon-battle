@@ -1,20 +1,54 @@
 const formEl = document.getElementById("form");
+const listEl = document.getElementById("list");
+let pokeTeam = [];
 
 // Create Pokemon Function
 formEl.addEventListener("submit", async function (event) {
     // Prevent the page from refreshing
     event.preventDefault();
-    const pokemon = await buildPokemon(await callApi("pokemon/" + event.target.children[1].value));
-    event.target.children[1].value = "";
-    console.log(pokemon);
+
+    // Grab value from HTML and existing poke names
+    let value = event.target.children[1].value;
+    let existingPokeNames = pokeTeam.map(poke => poke.name.toLowerCase());
+
+    // Validation
+    if (existingPokeNames.includes(value)) {
+        return alert("You already have that pokemon on your team!")
+    };
+    if (pokeTeam.length === 6) {
+        return alert("Your team already has six Pokemon!");
+    };
+
+    // Data will not be returned if the api errors out
+    const data = await callApi("pokemon/" + value.toLowerCase());
+    if (data) {
+        const pokemon = await buildPokemon(data);
+        console.log(pokemon);
+        pokeTeam.push(pokemon);
+        updatePage();
+        event.target.children[1].value = "";
+    };
+
+    return;
 });
 
 async function callApi(string, fullstring) {
     if (!fullstring) {
-        return await (await fetch("https://pokeapi.co/api/v2/" + string)).json();
+        const response = await fetch("https://pokeapi.co/api/v2/" + string);
+
+        if (response.ok) {
+            return await response.json();
+        };
+
     } else {
-        return await (await fetch(fullstring)).json();
-    }
+        const response = await fetch(fullstring);
+
+        if (response.ok) {
+            return await response.json();
+        };
+    };
+
+    return alert("No Pokemon found.");
 };
 
 async function buildPokemon(apiData) {
@@ -139,6 +173,21 @@ async function getPokeMoves(array) {
         }
     }
     return moves;
+};
+
+function updatePage() {
+
+    // Remove existing Pokemon from page
+    while (listEl.firstChild) {
+        listEl.removeChild(listEl.firstChild)
+    };
+
+    // Add Pokemon to page
+    for (let i = 0; i < pokeTeam.length; i++) {
+        const newLi = document.createElement("li");
+        newLi.textContent = pokeTeam[i].name.charAt(0).toUpperCase() + pokeTeam[i].name.slice(1);
+        listEl.appendChild(newLi);
+    }
 };
 
 
