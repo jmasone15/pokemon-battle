@@ -1,14 +1,15 @@
-const formEl = document.getElementById("form");
-const listEl = document.getElementById("list");
+const buttonEl = document.getElementById("pokeBtn");
+const inputEl = document.getElementById("pokeInput");
+const listEl = document.getElementById("listDiv");
 let pokeTeam = [];
 
 // Create Pokemon Function
-formEl.addEventListener("submit", async function (event) {
+buttonEl.addEventListener("click", async function (event) {
     // Prevent the page from refreshing
     event.preventDefault();
 
     // Grab value from HTML and existing poke names
-    let value = event.target.children[1].value;
+    let value = inputEl.value;
     let existingPokeNames = pokeTeam.map(poke => poke.name.toLowerCase());
 
     // Validation
@@ -26,7 +27,7 @@ formEl.addEventListener("submit", async function (event) {
         console.log(pokemon);
         pokeTeam.push(pokemon);
         updatePage();
-        event.target.children[1].value = "";
+        inputEl.value = "";
     };
 
     return;
@@ -185,19 +186,22 @@ function updatePage() {
 
     // Add Pokemon to page
     for (let i = 0; i < pokeTeam.length; i++) {
-        const newDiv = document.createElement("div");
-        newDiv.setAttribute("class", "liDiv");
-        listEl.appendChild(newDiv);
+        const newRow = document.createElement("div");
+        newRow.setAttribute("class", "row mb-3");
+        listEl.appendChild(newRow);
 
-        const newLi = document.createElement("li");
-        newLi.textContent = pokeTeam[i].name.charAt(0).toUpperCase() + pokeTeam[i].name.slice(1);
-        newDiv.appendChild(newLi);
+        const newCol = document.createElement("div");
+        newCol.setAttribute("class", "col");
+        newRow.appendChild(newCol);
 
-        const newCloseBtn = document.createElement("div");
-        newCloseBtn.setAttribute("class", "closeBtn");
-        newCloseBtn.setAttribute("id", pokeTeam[i].id);
-        newCloseBtn.addEventListener("click", removePokemon);
-        newDiv.appendChild(newCloseBtn);
+        const newBtn = document.createElement("button");
+        newBtn.setAttribute("class", "closeBtn");
+        newBtn.setAttribute("class", "btn btn-secondary button-width");
+        newBtn.setAttribute("id", pokeTeam[i].id);
+        newBtn.setAttribute("type", "button");
+        newBtn.textContent = pokeTeam[i].name.charAt(0).toUpperCase() + pokeTeam[i].name.slice(1);
+        newBtn.addEventListener("click", selectPokemon);
+        newCol.appendChild(newBtn);
     }
 };
 
@@ -210,6 +214,15 @@ function removePokemon(event) {
     // Remove the Pokemon from the pokeTeam array
     const pokeTeamIds = pokeTeam.map(poke => poke.id);
     pokeTeam.splice(pokeTeamIds.indexOf(Math.floor(event.target.getAttribute("id"))), 1);
+};
+
+function selectPokemon(event) {
+
+    for (let i = 0; i < listEl.childNodes.length; i++) {
+        listEl.childNodes[i].childNodes[0].childNodes[0].setAttribute("class", "btn btn-secondary button-width")
+    };
+
+    event.target.setAttribute("class", "btn btn-primary button-width")
 }
 
 
