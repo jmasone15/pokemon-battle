@@ -15,6 +15,7 @@ const selectedMoveType = document.getElementById("moveType");
 const selectedMovePower = document.getElementById("movePower");
 const selectedMovePP = document.getElementById("movePP");
 const selectedMoveDesc = document.getElementById("moveDesc");
+const startBtnEl = document.getElementById("startBtn");
 let pokeTeam = [];
 let targetPokemon;
 
@@ -48,6 +49,13 @@ buttonEl.addEventListener("click", async function (event) {
     return;
 });
 
+// Start Battle Function
+startBtnEl.addEventListener("click", function (event) {
+    event.preventDefault();
+
+    console.log(event.target);
+});
+
 async function callApi(string, fullstring) {
     if (!fullstring) {
         const response = await fetch("https://pokeapi.co/api/v2/" + string);
@@ -73,13 +81,13 @@ async function buildPokemon(apiData) {
     apiData.types.forEach(t => {
         typeArray.push(t.type.name)
     });
+    console.log(apiData);
 
     // Ability Finder
     const pokeAbility = await callApi(null, apiData.abilities[0].ability.url);
     const abilityEffect = pokeAbility.effect_entries.filter(a => {
         return a.language.name === "en"
     });
-    console.log(apiData);
 
     // Build the Pokemon
     const userPokemon = new Pokemon(
@@ -106,11 +114,19 @@ async function buildPokemon(apiData) {
 
 async function getPokeMoves(array) {
     let moves = [];
+    let filteredArray = [];
+
+    // Filter out moves that aren't learned by level-up
+    for (let i = 0; i < array.length; i++) {
+        if (array[i].version_group_details.map(x => x.move_learn_method.name).includes("level-up")) {
+            filteredArray.push(array[i]);
+        }
+    };
 
     // Some Pokemon (Like Ditto) only have a few possible moves
-    if (array.length < 4) {
-        for (let i = 0; i < array.length; i++) {
-            let moveData = await callApi(null, array[Math.floor(Math.random() * array.length)].move.url);
+    if (filteredArray.length < 4) {
+        for (let i = 0; i < filteredArray.length; i++) {
+            let moveData = await callApi(null, filteredArray[Math.floor(Math.random() * filteredArray.length)].move.url);
             let moveEffect = moveData.effect_entries.filter(m => {
                 return m.language.name === "en"
             });
@@ -147,12 +163,11 @@ async function getPokeMoves(array) {
         // Prevent the while loop from going on forever by having a count
         let count = 0;
 
-        while (moves.length < 4 && count < 20) {
+        while (moves.length < 4 && count < 50) {
 
             // Don't add duplicate moves
             let existingMoveIds = moves.map(x => x.id);
-            let moveData = await callApi(null, array[Math.floor(Math.random() * array.length)].move.url);
-
+            let moveData = await callApi(null, filteredArray[Math.floor(Math.random() * filteredArray.length)].move.url);
             if (moveData.damage_class.name !== "physical" || existingMoveIds.includes(moveData.id)) {
                 count++;
             } else {
@@ -163,7 +178,7 @@ async function getPokeMoves(array) {
                     new Move(
                         moveData.id,
                         moveData.name,
-                        moveEffect[0].short_effect,
+                        moveEffect[0].effect,
                         moveData.type.name,
                         moveData.damage_class.name,
                         moveData.accuracy,
@@ -222,6 +237,10 @@ function updatePage() {
         newBtn.textContent = capitlizeFirstLetter(pokeTeam[i].name);
         newBtn.addEventListener("click", selectPokemon);
         newCol.appendChild(newBtn);
+    };
+    
+    if (pokeTeam.length === 6) {
+        startBtnEl.setAttribute("class", "btn btn-primary btn-lg ")
     }
 };
 
