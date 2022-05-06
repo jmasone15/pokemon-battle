@@ -25,6 +25,7 @@
                     </div>
                     <div class="col-auto">
                         <button type="button" class="btn btn-primary" id="pokeBtn">Add Pokemon</button>
+                        <button type="button" class="btn btn-primary" id="testTeam">Test Team</button>
                     </div>
                 </div>
             </div>
@@ -38,7 +39,7 @@
                             <div class="container mt-3" id="listDiv">
                             </div>
                         </div>
-                        <div class="col-1"></div>
+                        <div class="col-1 display-none" id="middleDiv"></div>
                         <div class="col-9 display-none" id="selectedPoke">
                             <div class="container">
                                 <div class="row">
@@ -88,11 +89,23 @@
                                 </div>
                             </div>
                         </div>
+                        <div class="col-12 border display-none" id="battleBox">
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="row justify-content-center">
+        <div class="row display-none">
+            <div class="col-12">
+                <div class="container">
+                    <div class="row">
+                        <div class="col border">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row justify-content-center mt-3">
             <div class="col"></div>
             <div class="col justify-content-center" style="display: flex; flex-direction: row;">
                 <button class="display-none" id="startBtn">Start Battle</button>
@@ -100,7 +113,6 @@
             <div class="col"></div>
         </div>
     </div>
-
     <script src="pokeClass.js"></script>
     <script src="script.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>

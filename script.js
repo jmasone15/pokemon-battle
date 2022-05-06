@@ -16,8 +16,12 @@ const selectedMovePower = document.getElementById("movePower");
 const selectedMovePP = document.getElementById("movePP");
 const selectedMoveDesc = document.getElementById("moveDesc");
 const startBtnEl = document.getElementById("startBtn");
+const battleBoxEl = document.getElementById("battleBox");
+const middleDivEl = document.getElementById("middleDiv");
+const testTeam = document.getElementById("testTeam");
 let pokeTeam = [];
 let targetPokemon;
+let trainerRedTeam;
 
 // Create Pokemon Function
 buttonEl.addEventListener("click", async function (event) {
@@ -40,7 +44,6 @@ buttonEl.addEventListener("click", async function (event) {
     const data = await callApi("pokemon/" + value.toLowerCase());
     if (data) {
         const pokemon = await buildPokemon(data);
-        console.log(pokemon);
         pokeTeam.push(pokemon);
         updatePage();
         inputEl.value = "";
@@ -49,12 +52,44 @@ buttonEl.addEventListener("click", async function (event) {
     return;
 });
 
+// Test Team Function
+testTeam.addEventListener("click", async function (event) {
+    const array = ["torterra", "empoleon", "infernape", "togekiss", "rhyperior", "garchomp"];
+    for (let i = 0; i < array.length; i++) {
+        const data = await callApi("pokemon/" + array[i]);
+        const pokemon = await buildPokemon(data);
+        pokeTeam.push(pokemon);
+        updatePage();
+    }
+});
+
 // Start Battle Function
-startBtnEl.addEventListener("click", function (event) {
+startBtnEl.addEventListener("click", async function (event) {
     event.preventDefault();
 
-    console.log(event.target);
+    // Build the enemy team
+    trainerRedTeam = await getTrainer();
+
+    console.log(pokeTeam);
+    console.log(trainerRedTeam);
+
+    const userBattleTeam = pokeTeam.map(poke => poke.getBattlePokemon("user"));
+    const opponentBattleTeam = trainerRedTeam.map(poke => poke.getBattlePokemon("opp"));
 });
+
+async function getTrainer() {
+    const array = ["pikachu", "venusaur", "charizard", "blastoise", "snorlax", "lapras"];
+    let trainerTeam = [];
+    for (let i = 0; i < array.length; i++) {
+        const response = await fetch("https://pokeapi.co/api/v2/pokemon/" + array[i]);
+        if (response.ok) {
+            const data = await response.json();
+            const newPokemon = await buildPokemon(data);
+            trainerTeam.push(newPokemon);
+        }
+    }
+    return trainerTeam;
+};
 
 async function callApi(string, fullstring) {
     if (!fullstring) {
@@ -81,7 +116,6 @@ async function buildPokemon(apiData) {
     apiData.types.forEach(t => {
         typeArray.push(t.type.name)
     });
-    console.log(apiData);
 
     // Ability Finder
     const pokeAbility = await callApi(null, apiData.abilities[0].ability.url);
@@ -218,6 +252,7 @@ function updatePage() {
 
     // Un-hide the Team Div.
     teamEl.setAttribute("class", "col-2 text-center");
+    middleDivEl.setAttribute("class", "col-1");
 
     // Add Pokemon to page
     for (let i = 0; i < pokeTeam.length; i++) {

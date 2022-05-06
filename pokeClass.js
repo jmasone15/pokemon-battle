@@ -1,3 +1,11 @@
+class BattlePokemon {
+    constructor(name, hp, trainer) {
+        this.name = name;
+        this.hp = hp;
+        this.trainer = trainer;
+    }
+}
+
 class Pokemon {
     constructor(id, name, frontSprite, backSprite, level, types, ability, stats, moves) {
         this.id = id;
@@ -9,6 +17,11 @@ class Pokemon {
         this.ability = ability;
         this.stats = stats;
         this.moves = moves;
+    }
+    
+    getBattlePokemon(trainer) {
+        // At level 50, the pokemon's HP is 60 plus it's base stat
+        return new BattlePokemon(this.name, this.stats.hp + 60, trainer)
     }
 }
 
