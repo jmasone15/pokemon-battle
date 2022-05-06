@@ -1,7 +1,9 @@
 class Pokemon {
-    constructor(id, name, level, types, ability, stats, moves) {
+    constructor(id, name, frontSprite, backSprite, level, types, ability, stats, moves) {
         this.id = id;
         this.name = name;
+        this.frontSprite = frontSprite;
+        this.backSprite = backSprite;
         this.level = level;
         this.types = types;
         this.ability = ability;

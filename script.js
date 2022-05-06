@@ -70,6 +70,8 @@ async function buildPokemon(apiData) {
     const userPokemon = new Pokemon(
         apiData.id,
         apiData.name,
+        apiData.sprites.front_default,
+        apiData.sprites.back_default,
         50,
         typeArray,
         new Ability(pokeAbility.id, pokeAbility.name, abilityEffect[0].short_effect),
