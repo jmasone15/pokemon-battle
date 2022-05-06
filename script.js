@@ -1,7 +1,22 @@
 const buttonEl = document.getElementById("pokeBtn");
 const inputEl = document.getElementById("pokeInput");
 const listEl = document.getElementById("listDiv");
+const teamEl = document.getElementById("pokeTeam");
+const selectedPokeEl = document.getElementById("selectedPoke");
+const selectedPokeNameEl = document.getElementById("pokeName");
+const selectedPokeType1 = document.getElementById("pokeType1");
+const selectedPokeType2 = document.getElementById("pokeType2");
+const pokeFrontEl = document.getElementById("pokeFront");
+const pokeBackEl = document.getElementById("pokeBack");
+const moveGroupEl = document.getElementById("moveGroup");
+const selectedMoveName = document.getElementById("selectedMoveName");
+const selectedMoveCard = document.getElementById("selectedMoveCard");
+const selectedMoveType = document.getElementById("moveType");
+const selectedMovePower = document.getElementById("movePower");
+const selectedMovePP = document.getElementById("movePP");
+const selectedMoveDesc = document.getElementById("moveDesc");
 let pokeTeam = [];
+let targetPokemon;
 
 // Create Pokemon Function
 buttonEl.addEventListener("click", async function (event) {
@@ -137,7 +152,7 @@ async function getPokeMoves(array) {
             // Don't add duplicate moves
             let existingMoveIds = moves.map(x => x.id);
             let moveData = await callApi(null, array[Math.floor(Math.random() * array.length)].move.url);
-            
+
             if (moveData.damage_class.name !== "physical" || existingMoveIds.includes(moveData.id)) {
                 count++;
             } else {
@@ -186,6 +201,9 @@ function updatePage() {
         listEl.removeChild(listEl.firstChild)
     };
 
+    // Un-hide the Team Div.
+    teamEl.setAttribute("class", "col-2 text-center");
+
     // Add Pokemon to page
     for (let i = 0; i < pokeTeam.length; i++) {
         const newRow = document.createElement("div");
@@ -201,7 +219,7 @@ function updatePage() {
         newBtn.setAttribute("class", "btn btn-secondary button-width");
         newBtn.setAttribute("id", pokeTeam[i].id);
         newBtn.setAttribute("type", "button");
-        newBtn.textContent = pokeTeam[i].name.charAt(0).toUpperCase() + pokeTeam[i].name.slice(1);
+        newBtn.textContent = capitlizeFirstLetter(pokeTeam[i].name);
         newBtn.addEventListener("click", selectPokemon);
         newCol.appendChild(newBtn);
     }
@@ -216,16 +234,141 @@ function removePokemon(event) {
     // Remove the Pokemon from the pokeTeam array
     const pokeTeamIds = pokeTeam.map(poke => poke.id);
     pokeTeam.splice(pokeTeamIds.indexOf(Math.floor(event.target.getAttribute("id"))), 1);
+
+    // Hide the poke team div if no pokemon remain
+    if (!pokeTeam.length) {
+        teamEl.setAttribute("class", "col-2 text-center display-none")
+    };
+};
+
+function resetSelectedPoke() {
+    targetPokemon = "";
+    selectedPokeNameEl.textContent = "";
+    selectedPokeType1.textContent = "";
+    selectedPokeType2.textContent = "";
+    selectedPokeType1.removeAttribute("style");
+    selectedPokeType2.removeAttribute("style");
+    pokeFrontEl.removeAttribute("src");
+    pokeBackEl.removeAttribute("src");
+    selectedMoveCard.setAttribute("class", "card bg-secondary display-none");
+
+    // Remove existing Moves from page
+    while (moveGroupEl.firstChild) {
+        moveGroupEl.removeChild(moveGroupEl.firstChild)
+    };
 };
 
 function selectPokemon(event) {
 
+    resetSelectedPoke();
+
+    const pokeTeamIds = pokeTeam.map(poke => poke.id);
+    targetPokemon = pokeTeam[pokeTeamIds.indexOf(Math.floor(event.target.getAttribute("id")))];
+
+    // De-select other buttons
     for (let i = 0; i < listEl.childNodes.length; i++) {
         listEl.childNodes[i].childNodes[0].childNodes[0].setAttribute("class", "btn btn-secondary button-width")
     };
+    // Select the clicked button
+    event.target.setAttribute("class", "btn btn-primary button-width");
 
-    event.target.setAttribute("class", "btn btn-primary button-width")
-}
+    // Update Selected Poke El
+    selectedPokeNameEl.textContent = capitlizeFirstLetter(targetPokemon.name);
+    selectedPokeType1.textContent = capitlizeFirstLetter(targetPokemon.types[0]);
+    selectedPokeType1.setAttribute("class", "badge");
+    selectedPokeType1.setAttribute("style", `background-color: #${getHexCodeByType(targetPokemon.types[0])};`);
+    if (targetPokemon.types[1]) {
+        selectedPokeType2.setAttribute("class", "badge");
+        selectedPokeType2.setAttribute("style", `background-color: #${getHexCodeByType(targetPokemon.types[1])};`);
+        selectedPokeType2.textContent = capitlizeFirstLetter(targetPokemon.types[1]);
+    };
+    pokeFrontEl.setAttribute("src", targetPokemon.frontSprite);
+    pokeBackEl.setAttribute("src", targetPokemon.backSprite);
+
+    // Update Move Button Group
+    for (let i = 0; i < targetPokemon.moves.length; i++) {
+        let move = targetPokemon.moves[i];
+
+        // Move Button
+        let moveBtn = document.createElement("input");
+        moveBtn.setAttribute("type", "checkbox");
+        moveBtn.setAttribute("class", "btn-check");
+        moveBtn.setAttribute("autocomplete", "off");
+        moveBtn.setAttribute("id", move.id);
+        moveBtn.addEventListener("click", selectMove);
+        moveGroupEl.appendChild(moveBtn);
+
+        // Move Label
+        let moveLabel = document.createElement("label");
+        moveLabel.setAttribute("class", "btn btn-outline-info");
+        moveLabel.setAttribute("for", move.id);
+        moveLabel.textContent = capitlizeFirstLetter(move.name);
+        moveGroupEl.appendChild(moveLabel);
+    };
+
+    // Remove display-none tag from Selected Pokemon container
+    selectedPokeEl.setAttribute("class", "col-9")
+};
+
+function selectMove(event) {
+    const moveIds = targetPokemon.moves.map(move => move.id);
+    const targetMove = targetPokemon.moves[moveIds.indexOf(Math.floor(event.target.getAttribute("id")))];
+
+    selectedMoveCard.setAttribute("class", "card bg-secondary");
+
+    selectedMoveName.innerHTML = `${capitlizeFirstLetter(targetMove.name)}<span class="badge">${capitlizeFirstLetter(targetMove.type)}</span>`;
+    selectedMoveName.setAttribute("style", `display: flex; justify-content: space-between; background-color: #${getHexCodeByType(targetMove.type)};`);
+
+    selectedMoveType.textContent = `Type: ${capitlizeFirstLetter(targetMove.damageClass)}`;
+    selectedMovePower.textContent = `Power: ${targetMove.power}`;
+    selectedMovePP.textContent = `PP: ${targetMove.pp}`;
+    selectedMoveDesc.textContent = targetMove.description;
+};
+
+function getHexCodeByType(type) {
+    switch (type) {
+        case "normal":
+            return "A8A77A";
+        case "fire":
+            return "EE8130";
+        case "water":
+            return "6390F0";
+        case "electric":
+            return "F7D02C";
+        case "grass":
+            return "7AC74C";
+        case "ice":
+            return "96D9D6";
+        case "fighting":
+            return "C22E28";
+        case "poison":
+            return "A33EA1";
+        case "ground":
+            return "E2BF65";
+        case "flying":
+            return "A98FF3";
+        case "pyschic":
+            return "F95587";
+        case "bug":
+            return "A6B91A";
+        case "rock":
+            return "B6A136";
+        case "ghost":
+            return "735797";
+        case "dragon":
+            return "6F35FC";
+        case "dark":
+            return "705746";
+        case "steel":
+            return "B7B7CE";
+        default:
+            return "D685AD";
+    }
+};
+
+function capitlizeFirstLetter(string) {
+    return string.charAt(0).toUpperCase() +  string.slice(1);
+};
 
 
 // function init() {

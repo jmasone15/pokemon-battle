@@ -1,3 +1,7 @@
 .button-width {
     width: 125px;
 }
+
+.display-none {
+    display: none;
+}
