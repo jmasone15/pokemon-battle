@@ -19,6 +19,8 @@ const startBtnEl = document.getElementById("startBtn");
 const battleBoxEl = document.getElementById("battleBox");
 const middleDivEl = document.getElementById("middleDiv");
 const testTeam = document.getElementById("testTeam");
+const userBattleDivEl = document.getElementById("userBattleDiv");
+const oppBattleDivEl = document.getElementById("oppBattleDiv");
 let pokeTeam = [];
 let targetPokemon;
 let trainerRedTeam;
@@ -53,7 +55,7 @@ buttonEl.addEventListener("click", async function (event) {
 });
 
 // Test Team Function
-testTeam.addEventListener("click", async function (event) {
+testTeam.addEventListener("click", async function () {
     const array = ["torterra", "empoleon", "infernape", "togekiss", "rhyperior", "garchomp"];
     for (let i = 0; i < array.length; i++) {
         const data = await callApi("pokemon/" + array[i]);
@@ -67,14 +69,21 @@ testTeam.addEventListener("click", async function (event) {
 startBtnEl.addEventListener("click", async function (event) {
     event.preventDefault();
 
+    console.log(pokeTeam);
+
     // Build the enemy team
     trainerRedTeam = await getTrainer();
 
-    console.log(pokeTeam);
-    console.log(trainerRedTeam);
-
     const userBattleTeam = pokeTeam.map(poke => poke.getBattlePokemon("user"));
     const opponentBattleTeam = trainerRedTeam.map(poke => poke.getBattlePokemon("opp"));
+
+    populatePokemonList(userBattleDivEl, userBattleTeam);
+    populatePokemonList(oppBattleDivEl, opponentBattleTeam);
+
+    document.getElementById("header").setAttribute("class", "row justify-content-center mb-5 display-none");
+    document.getElementById("pokeSelect").setAttribute("class", "row justify-content-center display-none");
+    startBtnEl.setAttribute("class", "display-none");
+    document.getElementById("battleDiv").setAttribute("class", "row justify-content-center");
 });
 
 async function getTrainer() {
@@ -242,6 +251,29 @@ async function getPokeMoves(array) {
     return moves;
 };
 
+function populatePokemonList(div, array, eventListener) {
+    for (let i = 0; i < array.length; i++) {
+        const newRow = document.createElement("div");
+        newRow.setAttribute("class", "row mb-3");
+        div.appendChild(newRow);
+
+        const newCol = document.createElement("div");
+        newCol.setAttribute("class", "col");
+        newRow.appendChild(newCol);
+
+        const newBtn = document.createElement("button");
+        newBtn.setAttribute("class", "closeBtn");
+        newBtn.setAttribute("class", "btn btn-secondary button-width");
+        newBtn.setAttribute("id", array[i].id);
+        newBtn.setAttribute("type", "button");
+        newBtn.textContent = capitlizeFirstLetter(array[i].name);
+        if(eventListener) {
+            newBtn.addEventListener("click", eventListener);
+        }
+        newCol.appendChild(newBtn);
+    }
+};
+
 // Need to rework to only update new or removed values
 function updatePage() {
 
@@ -255,24 +287,7 @@ function updatePage() {
     middleDivEl.setAttribute("class", "col-1");
 
     // Add Pokemon to page
-    for (let i = 0; i < pokeTeam.length; i++) {
-        const newRow = document.createElement("div");
-        newRow.setAttribute("class", "row mb-3");
-        listEl.appendChild(newRow);
-
-        const newCol = document.createElement("div");
-        newCol.setAttribute("class", "col");
-        newRow.appendChild(newCol);
-
-        const newBtn = document.createElement("button");
-        newBtn.setAttribute("class", "closeBtn");
-        newBtn.setAttribute("class", "btn btn-secondary button-width");
-        newBtn.setAttribute("id", pokeTeam[i].id);
-        newBtn.setAttribute("type", "button");
-        newBtn.textContent = capitlizeFirstLetter(pokeTeam[i].name);
-        newBtn.addEventListener("click", selectPokemon);
-        newCol.appendChild(newBtn);
-    };
+    populatePokemonList(listEl, pokeTeam, selectPokemon);
     
     if (pokeTeam.length === 6) {
         startBtnEl.setAttribute("class", "btn btn-primary btn-lg ")

@@ -9,30 +9,34 @@
     <title>Pokemon Battle</title>
 </head>
 <body class="bg-dark text-white">
-    <div class="container mt-5">
+    <div class="container-flex mt-5">
         <div class="row justify-content-center mb-5">
             <div class="col-12">
-                <div class="text-center mb-5">
-                    <h1>Pokemon Battle Sim</h1>
-                    <h6>Select Six Pokemon for your team!</h6>
-                </div>
-                <div class="row g-3 align-items-center justify-content-center">
-                    <div class="col-auto">
-                        <label for="form-label">Pokemon Name:</label>
+                <div class="container">
+                    <div class="row">
+                        <div class="col text-center mb-5">
+                            <h1>Pokemon Battle Sim</h1>
+                            <h6>Select Six Pokemon for your team!</h6>
+                        </div>
                     </div>
-                    <div class="col-5">
-                        <input type="text" class="form-control bg-dark text-white" id="pokeInput" aria-describedby="pokeName">
-                    </div>
-                    <div class="col-auto">
-                        <button type="button" class="btn btn-primary" id="pokeBtn">Add Pokemon</button>
-                        <button type="button" class="btn btn-primary" id="testTeam">Test Team</button>
+                    <div id="header" class="row g-3 align-items-center justify-content-center">
+                        <div class="col-auto">
+                            <label for="form-label">Pokemon Name:</label>
+                        </div>
+                        <div class="col-5">
+                            <input type="text" class="form-control bg-dark text-white" id="pokeInput" aria-describedby="pokeName">
+                        </div>
+                        <div class="col-auto">
+                            <button type="button" class="btn btn-primary" id="pokeBtn">Add Pokemon</button>
+                            <button type="button" class="btn btn-primary" id="testTeam">Test Team</button>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="row justify-content-center">
+        <div id="pokeSelect" class="row justify-content-center">
             <div class="col-12">
-                <div class="container">
+                <div class="container-flex">
                     <div class="row">
                         <div class="col-2 text-center display-none" id="pokeTeam">
                             <h2>Your Team</h2>
@@ -95,11 +99,67 @@
                 </div>
             </div>
         </div>
-        <div class="row display-none">
+        <div id="battleDiv" class="row justify-content-center display-none">
             <div class="col-12">
-                <div class="container">
+                <div class="container-flex">
                     <div class="row">
-                        <div class="col border">
+                        <div class="col-2 text-center">
+                            <h2>Your Team</h2>
+                            <div class="container mt-3" id="userBattleDiv">
+                            </div>
+                        </div>
+                        <div class="col-8 border battle">
+                            <div class="container-flex">
+                                <div class="row mt-5">
+                                    <div class="col-9"></div>
+                                    <div class="col-3">
+                                        <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/389.png" class="pokeSprite">
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-1"></div>
+                                    <div class="col-3">
+                                        <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/back/395.png" class="pokeSprite">
+                                    </div>
+                                    <div class="col-8"></div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-6">
+                                        <div class="container-flex">
+                                            <div class="row align-items-center">
+                                                <div class="col-12">
+                                                    <h1 style="font-size: 50px;">What will [Pokemon] do?</h1>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-6">
+                                        <div class="container-flex text-center">
+                                            <div class="row">
+                                                <div class="col-6">
+                                                    <h3>Fight</h3>
+                                                </div>
+                                                <div class="col-6">
+                                                    <h3>Bag</h3>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-6">
+                                                    <h3>Pokemon</h3>
+                                                </div>
+                                                <div class="col-6">
+                                                    <h3>Run</h3>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-2 text-center">
+                            <h2>Trainer Red</h2>
+                            <div class="container mt-3" id="oppBattleDiv">
+                            </div>
                         </div>
                     </div>
                 </div>

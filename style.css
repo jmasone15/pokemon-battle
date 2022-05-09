@@ -1,7 +1,24 @@
+body {
+    max-width: 100%;
+    overflow-x: hidden;
+}
+
 .button-width {
     width: 125px;
 }
 
 .display-none {
     display: none;
+}
+
+.battle {
+    background-color: #7ee8fa;
+    background-image: linear-gradient(315deg, #7ee8fa 0%, #80ff72 74%);
+    min-height: 885px; 
+    max-height: 885px;   
+}
+
+.pokeSprite {
+    height: 300px;
+    width: 300px;
 }
