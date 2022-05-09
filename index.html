@@ -111,43 +111,110 @@
                         <div class="col-8 border battle">
                             <div class="container-flex">
                                 <div class="row mt-5">
-                                    <div class="col-9"></div>
-                                    <div class="col-3">
-                                        <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/389.png" class="pokeSprite">
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-1"></div>
-                                    <div class="col-3">
-                                        <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/back/395.png" class="pokeSprite">
-                                    </div>
-                                    <div class="col-8"></div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-6">
-                                        <div class="container-flex">
-                                            <div class="row align-items-center">
-                                                <div class="col-12">
-                                                    <h1 style="font-size: 50px;">What will [Pokemon] do?</h1>
+                                    <div class="col-9">
+                                        <div class="container-flex pokemon-status">
+                                            <div class="row mt-2">
+                                                <div class="col">
+                                                    <div class="container">
+                                                        <div class="row">
+                                                            <div class="col-8">
+                                                                <h3>[Pokemon Name] <span class="badge bg-info">Frozen</span></h3>
+                                                            </div>
+                                                            <div class="col-4">
+                                                                <h3>Lv: 50</h3>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row" style="height: 20px;"></div>
+                                            <div class="row">
+                                                <div class="container">
+                                                    <div class="row">
+                                                        <div class="col health">
+                                                            <span class="badge bg-secondary" style="width: fit-content">HP:</span>
+                                                            <div class="progress" style="width: 90%;">
+                                                                <div class="progress-bar health-bar progress-bar-striped progress-bar-animated" role="progressbar" style="width: 75%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col-6">
-                                        <div class="container-flex text-center">
+                                    <div class="col-3">
+                                        <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/389.png" class="pokeSprite">
+                                    </div>
+                                </div>
+                                <div class="row justify-content-between">
+                                    <div class="col-1"></div>
+                                    <div class="col-3">
+                                        <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/back/395.png" class="pokeSprite">
+                                    </div>
+                                    <div class="col-8 align-self-end mb-4" style="display: flex; flex-direction: column;">
+                                        <div class="container-flex pokemon-status">
+                                            <div class="row mt-2">
+                                                <div class="col">
+                                                    <div class="container">
+                                                        <div class="row">
+                                                            <div class="col-8">
+                                                                <h3>[Pokemon Name] <span class="badge bg-info">Frozen</span></h3>
+                                                            </div>
+                                                            <div class="col-4">
+                                                                <h3>Lv: 50</h3>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row" style="height: 20px;"></div>
                                             <div class="row">
-                                                <div class="col-6">
+                                                <div class="container">
+                                                    <div class="row">
+                                                        <div class="col health">
+                                                            <span class="badge bg-secondary" style="width: fit-content">HP:</span>
+                                                            <div class="progress" style="width: 90%;">
+                                                                <div class="progress-bar health-bar progress-bar-striped progress-bar-animated" role="progressbar" style="width: 75%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-6">
+                                        <div class="container-flex text-box">
+                                            <div class="row align-items-center">
+                                                <div class="col-12">
+                                                    <div class="container-flex">
+                                                        <div class="row">
+                                                            <div class="col-11 mt-2 mx-2">
+                                                                <h1 style="font-size: 50px;">What will [Pokemon] do?</h1>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-6 mt-2">
+                                        <div class="container-flex text-center">
+                                            <div class="row mx-2">
+                                                <div class="col-6 selectBox" id="fight">
                                                     <h3>Fight</h3>
                                                 </div>
-                                                <div class="col-6">
+                                                <div class="col-6 selectBox" id="bag">
                                                     <h3>Bag</h3>
                                                 </div>
                                             </div>
-                                            <div class="row">
-                                                <div class="col-6">
+                                            <div class="row" style="height: 10px;"></div>
+                                            <div class="row mx-2">
+                                                <div class="col-6 selectBox" id="pokemon">
                                                     <h3>Pokemon</h3>
                                                 </div>
-                                                <div class="col-6">
+                                                <div class="col-6 selectBox" id="run">
                                                     <h3>Run</h3>
                                                 </div>
                                             </div>

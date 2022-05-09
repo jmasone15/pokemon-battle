@@ -22,3 +22,85 @@ body {
     height: 300px;
     width: 300px;
 }
+
+.text-box {
+    background-color: white;
+    color: black;
+    border: solid yellow 5px;
+    border-radius: 8px;
+    outline: 3px solid black;
+    min-height: 225px;
+}
+
+.selectBox {
+    border: 3px white solid;
+    border-radius: 50px;
+    min-height: 100px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    cursor: pointer;
+}
+
+.selectBox h3 {
+    font-size: 35px;
+}
+
+#fight {
+    background-color: rgb(237, 43, 43);
+}
+
+#bag {
+    background-color: rgb(237, 237, 42);
+}
+
+#pokemon {
+    background-color: rgb(38, 243, 38);
+}
+
+#run {
+    background-color: rgb(64, 64, 246);
+}
+
+#fight:hover {
+    background-color: rgb(239, 110, 110);
+    border-color: rgb(237, 43, 43);
+}
+
+#bag:hover {
+    background-color: rgb(245, 245, 108);
+    border-color: rgb(237, 237, 42);
+}
+
+#pokemon:hover {
+    background-color: rgb(107, 232, 107);
+    border-color: rgb(38, 243, 38);
+}
+
+#run:hover {
+    background-color: rgb(119, 119, 233);
+    border-color: rgb(64, 64, 246);
+}
+
+.health {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    margin-left: 5px;
+}
+
+.health-bar {
+    background-color: #2a9c0a;
+}
+
+.pokemon-status {
+    border: black 3px solid;
+    background-color: white;
+    color: black;
+    max-width: 750px;
+    min-height: 120px;
+    border-radius: 8px;
+    align-self: flex-end;
+    min-width: 744px;
+}
