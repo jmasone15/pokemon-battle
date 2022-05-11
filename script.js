@@ -21,6 +21,17 @@ const middleDivEl = document.getElementById("middleDiv");
 const testTeam = document.getElementById("testTeam");
 const userBattleDivEl = document.getElementById("userBattleDiv");
 const oppBattleDivEl = document.getElementById("oppBattleDiv");
+const oppPokeNameEl =  document.getElementById("opp-poke-name");
+const oppPokeLevelEl =  document.getElementById("opp-poke-level");
+const oppPokeHealthDivEl =  document.getElementById("opp-health-div");
+const oppPokeHealthBarEl =  document.getElementById("opp-health-bar");
+const oppPokeSpriteEl =  document.getElementById("opp-poke-sprite");
+const userPokeNameEl =  document.getElementById("user-poke-name");
+const userPokeLevelEl =  document.getElementById("user-poke-level");
+const userPokeHealthDivEl =  document.getElementById("user-health-div");
+const userPokeHealthBarEl =  document.getElementById("user-health-bar");
+const userPokeSpriteEl =  document.getElementById("user-poke-sprite");
+const battleTextBoxEl = document.getElementById("battle-text-box");
 let pokeTeam = [];
 let targetPokemon;
 let trainerRedTeam;
@@ -77,13 +88,7 @@ startBtnEl.addEventListener("click", async function (event) {
     const userBattleTeam = pokeTeam.map(poke => poke.getBattlePokemon("user"));
     const opponentBattleTeam = trainerRedTeam.map(poke => poke.getBattlePokemon("opp"));
 
-    populatePokemonList(userBattleDivEl, userBattleTeam);
-    populatePokemonList(oppBattleDivEl, opponentBattleTeam);
-
-    document.getElementById("header").setAttribute("class", "row justify-content-center mb-5 display-none");
-    document.getElementById("pokeSelect").setAttribute("class", "row justify-content-center display-none");
-    startBtnEl.setAttribute("class", "display-none");
-    document.getElementById("battleDiv").setAttribute("class", "row justify-content-center");
+    updateBattlePage(userBattleTeam, opponentBattleTeam);
 });
 
 async function getTrainer() {
@@ -292,6 +297,40 @@ function updatePage() {
     if (pokeTeam.length === 6) {
         startBtnEl.setAttribute("class", "btn btn-primary btn-lg ")
     }
+};
+
+function updateBattlePage(user, opp) {
+    populatePokemonList(userBattleDivEl, user);
+    populatePokemonList(oppBattleDivEl, opp);
+
+    document.getElementById("header").setAttribute("class", "row justify-content-center mb-5 display-none");
+    document.getElementById("pokeSelect").setAttribute("class", "row justify-content-center display-none");
+    startBtnEl.setAttribute("class", "display-none");
+    document.getElementById("battleDiv").setAttribute("class", "row justify-content-center");
+
+    const firstUserPokemon = pokeTeam.filter(x  => x.id === user[0].id);
+    const firstOppPokemon = trainerRedTeam.filter(x  => x.id === opp[0].id);
+
+    userPokeNameEl.textContent = capitlizeFirstLetter(firstUserPokemon[0].name);
+    oppPokeNameEl.textContent = capitlizeFirstLetter(firstOppPokemon[0].name);
+    userPokeLevelEl.textContent = `Level: ${firstUserPokemon[0].level}`;
+    oppPokeLevelEl.textContent = `Level: ${firstOppPokemon[0].level}`;
+    userPokeHealthDivEl.setAttribute("style", `width: ${getPokemonHealthPercent(user[0].hp, firstUserPokemon[0])}%`);
+    oppPokeHealthDivEl.setAttribute("style", `width: ${getPokemonHealthPercent(opp[0].hp, firstOppPokemon[0])}%`);
+    userPokeHealthBarEl.setAttribute("style", `width: ${getPokemonHealthPercent(user[0].hp, firstUserPokemon[0])}%`);
+    oppPokeHealthBarEl.setAttribute("style", `width: ${getPokemonHealthPercent(opp[0].hp, firstOppPokemon[0])}%`);
+    userPokeHealthBarEl.setAttribute("aria-valuenow", getPokemonHealthPercent(user[0].hp, firstUserPokemon[0]));
+    oppPokeHealthBarEl.setAttribute("aria-valuenow", getPokemonHealthPercent(opp[0].hp, firstOppPokemon[0]));
+    oppPokeSpriteEl.setAttribute("src", firstOppPokemon[0].frontSprite);
+    userPokeSpriteEl.setAttribute("src", firstUserPokemon[0].backSprite);
+    battleTextBoxEl.textContent = `What will ${capitlizeFirstLetter(firstUserPokemon[0].name)} do?`;
+};
+
+function getPokemonHealthPercent(current, pokemon) {
+    const baseHealth = pokemon.stats.hp + 60;
+    const remainingNum = (current / baseHealth) * 100;
+    console.log(remainingNum);
+    return remainingNum;
 };
 
 function removePokemon(event) {

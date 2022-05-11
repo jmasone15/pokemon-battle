@@ -18,11 +18,6 @@ body {
     max-height: 885px;   
 }
 
-.pokeSprite {
-    height: 300px;
-    width: 300px;
-}
-
 .text-box {
     background-color: white;
     color: black;
@@ -103,4 +98,21 @@ body {
     border-radius: 8px;
     align-self: flex-end;
     min-width: 744px;
+}
+
+.battle-sprite {
+    animation-duration: 2s;
+    animation-iteration-count: infinite;
+    transform-origin: bottom;
+    animation-name: bounce-1;
+    animation-timing-function: ease;
+    animation-name: bounce-1;
+    height: 300px;
+    width: 300px;
+}
+
+@keyframes bounce-1 {
+    0%   { transform: translateY(0); }
+    50%  { transform: translateY(-10px); }
+    100% { transform: translateY(0); }
 }

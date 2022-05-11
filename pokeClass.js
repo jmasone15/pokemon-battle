@@ -4,7 +4,8 @@ class BattlePokemon {
         this.name = name;
         this.hp = hp;
         this.trainer = trainer;
-        this.isAlive = true
+        this.isAlive = true;
+        this.status = null;
     }
 
     checkFaint() {

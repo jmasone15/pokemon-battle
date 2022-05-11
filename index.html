@@ -118,10 +118,10 @@
                                                     <div class="container">
                                                         <div class="row">
                                                             <div class="col-8">
-                                                                <h3>[Pokemon Name] <span class="badge bg-info">Frozen</span></h3>
+                                                                <h3 id="opp-poke-name"></h3>
                                                             </div>
                                                             <div class="col-4">
-                                                                <h3>Lv: 50</h3>
+                                                                <h3 id="opp-poke-level"></h3>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -131,10 +131,10 @@
                                             <div class="row">
                                                 <div class="container">
                                                     <div class="row">
-                                                        <div class="col health">
+                                                        <div class="col health mx-4">
                                                             <span class="badge bg-secondary" style="width: fit-content">HP:</span>
-                                                            <div class="progress" style="width: 90%;">
-                                                                <div class="progress-bar health-bar progress-bar-striped progress-bar-animated" role="progressbar" style="width: 75%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
+                                                            <div class="progress" style="width: 100%;" id="opp-health-div">
+                                                                <div id="opp-health-bar" class="progress-bar health-bar progress-bar-striped progress-bar-animated" role="progressbar" style="width: 100%;" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -143,13 +143,13 @@
                                         </div>
                                     </div>
                                     <div class="col-3">
-                                        <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/389.png" class="pokeSprite">
+                                        <img id="opp-poke-sprite" class="battle-sprite" src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/389.png" class="pokeSprite">
                                     </div>
                                 </div>
                                 <div class="row justify-content-between">
                                     <div class="col-1"></div>
                                     <div class="col-3">
-                                        <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/back/395.png" class="pokeSprite">
+                                        <img id="user-poke-sprite" class="battle-sprite" src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/back/395.png" class="pokeSprite">
                                     </div>
                                     <div class="col-8 align-self-end mb-4" style="display: flex; flex-direction: column;">
                                         <div class="container-flex pokemon-status">
@@ -158,10 +158,10 @@
                                                     <div class="container">
                                                         <div class="row">
                                                             <div class="col-8">
-                                                                <h3>[Pokemon Name] <span class="badge bg-info">Frozen</span></h3>
+                                                                <h3 id="user-poke-name"></h3>
                                                             </div>
                                                             <div class="col-4">
-                                                                <h3>Lv: 50</h3>
+                                                                <h3 id="user-poke-level"></h3>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -171,10 +171,10 @@
                                             <div class="row">
                                                 <div class="container">
                                                     <div class="row">
-                                                        <div class="col health">
+                                                        <div class="col health mx-4">
                                                             <span class="badge bg-secondary" style="width: fit-content">HP:</span>
-                                                            <div class="progress" style="width: 90%;">
-                                                                <div class="progress-bar health-bar progress-bar-striped progress-bar-animated" role="progressbar" style="width: 75%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
+                                                            <div class="progress" style="width: 100%;" id="user-health-div">
+                                                                <div id="user-health-bar" class="progress-bar health-bar progress-bar-striped progress-bar-animated" role="progressbar" style="width: 100%;" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -191,7 +191,7 @@
                                                     <div class="container-flex">
                                                         <div class="row">
                                                             <div class="col-11 mt-2 mx-2">
-                                                                <h1 style="font-size: 50px;">What will [Pokemon] do?</h1>
+                                                                <h1 id="battle-text-box" style="font-size: 50px;">What will [Pokemon] do?</h1>
                                                             </div>
                                                         </div>
                                                     </div>
