@@ -184,14 +184,30 @@
                                     </div>
                                 </div>
                                 <div class="row">
-                                    <div class="col-6">
+                                    <div class="col-9">
                                         <div class="container-flex text-box">
                                             <div class="row align-items-center">
                                                 <div class="col-12">
                                                     <div class="container-flex">
-                                                        <div class="row">
+                                                        <div id="text-box-row" class="row">
                                                             <div class="col-11 mt-2 mx-2">
-                                                                <h1 id="battle-text-box" style="font-size: 50px;">What will [Pokemon] do?</h1>
+                                                                <h1 id="battle-text-box" class="mx-5" style="font-size: 50px;"></h1>
+                                                            </div>
+                                                        </div>
+                                                        <div id="text-box-row-battle" class="row display-none">
+                                                            <div class="col-6 move-box">
+                                                                <h1 id="battle-move-one" class="mx-5" style="font-size: 50px;"></h1>
+                                                            </div>
+                                                            <div class="col-6 move-box">
+                                                                <h1 id="battle-move-two" class="mx-5" style="font-size: 50px;"></h1>
+                                                            </div>
+                                                        </div>
+                                                        <div id="text-box-row-battle-two" class="row display-none">
+                                                            <div class="col-6 move-box">
+                                                                <h1 id="battle-move-three" class="mx-5" style="font-size: 50px;"></h1>
+                                                            </div>
+                                                            <div class="col-6 move-box">
+                                                                <h1 id="battle-move-four" class="mx-5" style="font-size: 50px;"></h1>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -199,7 +215,26 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col-6 mt-2">
+                                    <div class="col-3 mt-2">
+                                        <div class="container-flex text-box display-none">
+                                            <div class="row mx-2">
+                                                <div class="col-6 selectBox" id="battle-move-info-one">
+                                                    <h4></h4>
+                                                </div>
+                                                <div class="col-6 selectBox" id="battle-move-info-two">
+                                                    <h4></h4>
+                                                </div>
+                                            </div>
+                                            <div class="row" style="height: 10px;"></div>
+                                            <div class="row mx-2">
+                                                <div class="col-6 selectBox" id="battle-move-info-three">
+                                                    <h4></h4>
+                                                </div>
+                                                <div class="col-6 selectBox" id="battle-move-info-four">
+                                                    <h4></h4>
+                                                </div>
+                                            </div>
+                                        </div>
                                         <div class="container-flex text-center">
                                             <div class="row mx-2">
                                                 <div class="col-6 selectBox" id="fight">

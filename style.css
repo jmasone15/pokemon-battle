@@ -116,3 +116,10 @@ body {
     50%  { transform: translateY(-10px); }
     100% { transform: translateY(0); }
 }
+
+.move-box:hover {
+    background-color: rgb(225, 155, 155);
+    border-radius: 10px;
+    color: white;
+    cursor: pointer;
+}

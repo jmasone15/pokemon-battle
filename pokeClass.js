@@ -1,11 +1,12 @@
 class BattlePokemon {
-    constructor(id, name, hp, trainer) {
+    constructor(id, name, hp, trainer, moves) {
         this.id = id;
         this.name = name;
         this.hp = hp;
         this.trainer = trainer;
         this.isAlive = true;
         this.status = null;
+        this.moves = moves
     }
 
     checkFaint() {
@@ -25,10 +26,21 @@ class Pokemon {
         this.stats = stats;
         this.moves = moves;
     }
+
+    getBattleMoves() {
+        const battleMoves = this.moves.map(x => x.getBattleMove());
+        return battleMoves;
+    }
     
     getBattlePokemon(trainer) {
         // At level 50, the pokemon's HP is 60 plus it's base stat
-        return new BattlePokemon(this.id, this.name, this.stats.hp + 60, trainer)
+        return new BattlePokemon(
+            this.id, 
+            this.name, 
+            this.stats.hp + 60, 
+            trainer,
+            this.getBattleMoves()
+        )
     }
 }
 
@@ -40,6 +52,15 @@ class Stats {
         this.special_attack = special_attack;
         this.special_defense = special_defense;
         this.speed = speed;
+    }
+}
+
+class BattleMove {
+    constructor(id, name, type, pp) {
+        this.id = id;
+        this.name = name;
+        this.type = type;
+        this.pp = pp;
     }
 }
 
@@ -56,6 +77,10 @@ class Move {
         this.priority = priority;
         this.target = target;
         this.metadata = metadata;
+    }
+
+    getBattleMove() {
+        return new BattleMove(this.id, this.name, this.type, this.pp)
     }
 }
 

@@ -21,20 +21,35 @@ const middleDivEl = document.getElementById("middleDiv");
 const testTeam = document.getElementById("testTeam");
 const userBattleDivEl = document.getElementById("userBattleDiv");
 const oppBattleDivEl = document.getElementById("oppBattleDiv");
-const oppPokeNameEl =  document.getElementById("opp-poke-name");
-const oppPokeLevelEl =  document.getElementById("opp-poke-level");
-const oppPokeHealthDivEl =  document.getElementById("opp-health-div");
-const oppPokeHealthBarEl =  document.getElementById("opp-health-bar");
-const oppPokeSpriteEl =  document.getElementById("opp-poke-sprite");
-const userPokeNameEl =  document.getElementById("user-poke-name");
-const userPokeLevelEl =  document.getElementById("user-poke-level");
-const userPokeHealthDivEl =  document.getElementById("user-health-div");
-const userPokeHealthBarEl =  document.getElementById("user-health-bar");
-const userPokeSpriteEl =  document.getElementById("user-poke-sprite");
+const oppPokeNameEl = document.getElementById("opp-poke-name");
+const oppPokeLevelEl = document.getElementById("opp-poke-level");
+const oppPokeHealthDivEl = document.getElementById("opp-health-div");
+const oppPokeHealthBarEl = document.getElementById("opp-health-bar");
+const oppPokeSpriteEl = document.getElementById("opp-poke-sprite");
+const userPokeNameEl = document.getElementById("user-poke-name");
+const userPokeLevelEl = document.getElementById("user-poke-level");
+const userPokeHealthDivEl = document.getElementById("user-health-div");
+const userPokeHealthBarEl = document.getElementById("user-health-bar");
+const userPokeSpriteEl = document.getElementById("user-poke-sprite");
 const battleTextBoxEl = document.getElementById("battle-text-box");
+const textRowEl = document.getElementById("text-box-row");
+const battleTextRowEl = document.getElementById("text-box-row-battle");
+const battleTextRowTwoEl = document.getElementById("text-box-row-battle-two");
+const fightButtonEl = document.getElementById("fight");
+const bagButtonEl = document.getElementById("bag");
+const pokeButtonEl = document.getElementById("pokemon");
+const runButtonEl = document.getElementById("run");
+const battleMoveOneEl = document.getElementById("battle-move-one");
+const battleMoveTwoEl = document.getElementById("battle-move-two");
+const battleMoveThreeEl = document.getElementById("battle-move-three");
+const battleMoveFourEl = document.getElementById("battle-move-four");
 let pokeTeam = [];
+let pokeBattleTeam = [];
 let targetPokemon;
-let trainerRedTeam;
+let pokeBattleIdx = 0;
+let trainerRedTeam = [];
+let trainerBattleTeam = [];
+let trainerBattleIdx = 0;
 
 // Create Pokemon Function
 buttonEl.addEventListener("click", async function (event) {
@@ -80,16 +95,23 @@ testTeam.addEventListener("click", async function () {
 startBtnEl.addEventListener("click", async function (event) {
     event.preventDefault();
 
-    console.log(pokeTeam);
-
     // Build the enemy team
     trainerRedTeam = await getTrainer();
 
-    const userBattleTeam = pokeTeam.map(poke => poke.getBattlePokemon("user"));
-    const opponentBattleTeam = trainerRedTeam.map(poke => poke.getBattlePokemon("opp"));
+    for (let i = 0; i < pokeTeam.length; i++) {
+        pokeBattleTeam.push(pokeTeam[i].getBattlePokemon("user"));
+    };
 
-    updateBattlePage(userBattleTeam, opponentBattleTeam);
+    for (let i = 0; i < trainerRedTeam.length; i++) {
+        trainerBattleTeam.push(trainerRedTeam[i].getBattlePokemon("opp"))
+    };
+
+    updateBattlePage();
+    battleMenu();
 });
+
+// Fight Button Function
+fightButtonEl.addEventListener("click", fight);
 
 async function getTrainer() {
     const array = ["pikachu", "venusaur", "charizard", "blastoise", "snorlax", "lapras"];
@@ -272,7 +294,7 @@ function populatePokemonList(div, array, eventListener) {
         newBtn.setAttribute("id", array[i].id);
         newBtn.setAttribute("type", "button");
         newBtn.textContent = capitlizeFirstLetter(array[i].name);
-        if(eventListener) {
+        if (eventListener) {
             newBtn.addEventListener("click", eventListener);
         }
         newCol.appendChild(newBtn);
@@ -293,43 +315,50 @@ function updatePage() {
 
     // Add Pokemon to page
     populatePokemonList(listEl, pokeTeam, selectPokemon);
-    
+
     if (pokeTeam.length === 6) {
         startBtnEl.setAttribute("class", "btn btn-primary btn-lg ")
     }
 };
 
-function updateBattlePage(user, opp) {
-    populatePokemonList(userBattleDivEl, user);
-    populatePokemonList(oppBattleDivEl, opp);
+function updateBattlePage() {
+    populatePokemonList(userBattleDivEl, pokeBattleTeam);
+    populatePokemonList(oppBattleDivEl, trainerBattleTeam);
 
     document.getElementById("header").setAttribute("class", "row justify-content-center mb-5 display-none");
     document.getElementById("pokeSelect").setAttribute("class", "row justify-content-center display-none");
     startBtnEl.setAttribute("class", "display-none");
     document.getElementById("battleDiv").setAttribute("class", "row justify-content-center");
+};
 
-    const firstUserPokemon = pokeTeam.filter(x  => x.id === user[0].id);
-    const firstOppPokemon = trainerRedTeam.filter(x  => x.id === opp[0].id);
+function updateBattleText() {
 
-    userPokeNameEl.textContent = capitlizeFirstLetter(firstUserPokemon[0].name);
-    oppPokeNameEl.textContent = capitlizeFirstLetter(firstOppPokemon[0].name);
-    userPokeLevelEl.textContent = `Level: ${firstUserPokemon[0].level}`;
-    oppPokeLevelEl.textContent = `Level: ${firstOppPokemon[0].level}`;
-    userPokeHealthDivEl.setAttribute("style", `width: ${getPokemonHealthPercent(user[0].hp, firstUserPokemon[0])}%`);
-    oppPokeHealthDivEl.setAttribute("style", `width: ${getPokemonHealthPercent(opp[0].hp, firstOppPokemon[0])}%`);
-    userPokeHealthBarEl.setAttribute("style", `width: ${getPokemonHealthPercent(user[0].hp, firstUserPokemon[0])}%`);
-    oppPokeHealthBarEl.setAttribute("style", `width: ${getPokemonHealthPercent(opp[0].hp, firstOppPokemon[0])}%`);
-    userPokeHealthBarEl.setAttribute("aria-valuenow", getPokemonHealthPercent(user[0].hp, firstUserPokemon[0]));
-    oppPokeHealthBarEl.setAttribute("aria-valuenow", getPokemonHealthPercent(opp[0].hp, firstOppPokemon[0]));
-    oppPokeSpriteEl.setAttribute("src", firstOppPokemon[0].frontSprite);
-    userPokeSpriteEl.setAttribute("src", firstUserPokemon[0].backSprite);
-    battleTextBoxEl.textContent = `What will ${capitlizeFirstLetter(firstUserPokemon[0].name)} do?`;
+    const user = pokeBattleTeam[pokeBattleIdx];
+    const opp = trainerBattleTeam[trainerBattleIdx];
+
+    const userData = pokeTeam[pokeBattleIdx];
+    const oppData = trainerRedTeam[trainerBattleIdx];
+
+    userPokeNameEl.setAttribute("pokeId", userData.id);
+    oppPokeNameEl.setAttribute("pokeId", oppData.id);
+    userPokeNameEl.textContent = capitlizeFirstLetter(userData.name);
+    oppPokeNameEl.textContent = capitlizeFirstLetter(oppData.name);
+    userPokeLevelEl.textContent = `Level: ${userData.level}`;
+    oppPokeLevelEl.textContent = `Level: ${oppData.level}`;
+    userPokeHealthDivEl.setAttribute("style", `width: ${getPokemonHealthPercent(user.hp, userData)}%`);
+    oppPokeHealthDivEl.setAttribute("style", `width: ${getPokemonHealthPercent(opp.hp, oppData)}%`);
+    userPokeHealthBarEl.setAttribute("style", `width: ${getPokemonHealthPercent(user.hp, userData)}%`);
+    oppPokeHealthBarEl.setAttribute("style", `width: ${getPokemonHealthPercent(opp.hp, oppData)}%`);
+    userPokeHealthBarEl.setAttribute("aria-valuenow", getPokemonHealthPercent(user.hp, userData));
+    oppPokeHealthBarEl.setAttribute("aria-valuenow", getPokemonHealthPercent(opp.hp, oppData));
+    oppPokeSpriteEl.setAttribute("src", oppData.frontSprite);
+    userPokeSpriteEl.setAttribute("src", userData.backSprite);
+    battleTextBoxEl.textContent = `What will ${capitlizeFirstLetter(userData.name)} do?`;
 };
 
 function getPokemonHealthPercent(current, pokemon) {
     const baseHealth = pokemon.stats.hp + 60;
     const remainingNum = (current / baseHealth) * 100;
-    console.log(remainingNum);
     return remainingNum;
 };
 
@@ -475,33 +504,278 @@ function getHexCodeByType(type) {
 };
 
 function capitlizeFirstLetter(string) {
-    return string.charAt(0).toUpperCase() +  string.slice(1);
+    return string.charAt(0).toUpperCase() + string.slice(1);
 };
 
+function battleMenu() {
+    let userCanBattle = pokeBattleTeam.filter(x => x.isAlive);
+    let oppCanBattle = trainerBattleTeam.filter(x => x.isAlive);
 
-// function init() {
+    if (!userCanBattle || !oppCanBattle) {
+        endBattle();
+    } else {
+        updateBattleText();
+    };
+};
 
-    // Pokemon Creation
+function fight() {
+    textRowEl.setAttribute("class", "row display-none");
+    battleTextRowEl.setAttribute("class", "row");
+    battleTextRowTwoEl.setAttribute("class", "row");
 
+    const userPoke = pokeTeam[pokeBattleIdx];
 
-    // Create function to prompt the user to select their pokemon
-    // Start with one and move on to select more pokemon
+    for (let i = 0; i < userPoke.moves.length; i++) {
+        const move = userPoke.moves[i]
+        switch (i) {
+            case 3:
+                battleMoveFourEl.textContent = capitlizeFirstLetter(move.name);
+                battleMoveFourEl.setAttribute("pokeId", userPoke.id);
+                battleMoveFourEl.setAttribute("moveId", move.id);
+                battleMoveFourEl.parentElement.addEventListener("click", selectMove);
+                break;
+            case 2:
+                battleMoveThreeEl.textContent = capitlizeFirstLetter(move.name);
+                battleMoveThreeEl.setAttribute("pokeId", userPoke.id);
+                battleMoveThreeEl.setAttribute("moveId", move.id);
+                battleMoveThreeEl.parentElement.addEventListener("click", selectMove);
+                break;
+            case 1:
+                battleMoveTwoEl.textContent = capitlizeFirstLetter(move.name);
+                battleMoveTwoEl.setAttribute("pokeId", userPoke.id);
+                battleMoveTwoEl.setAttribute("moveId", move.id);
+                battleMoveTwoEl.parentElement.addEventListener("click", selectMove);
+                break;
+            default:
+                battleMoveOneEl.textContent = capitlizeFirstLetter(move.name);
+                battleMoveOneEl.setAttribute("pokeId", userPoke.id);
+                battleMoveOneEl.setAttribute("moveId", move.id);
+                battleMoveOneEl.parentElement.addEventListener("click", selectMove);
+                break;
+        }
+    }
+};
 
-    // Build computer teams, maybe gym leaders?
-    // Could start out with Brock
+function selectMove({ target }) {
+    let moveId;
 
-    // Fight functionality:
-    // Looping function that continues to run while both teams are alive
-    // User selects move | Computer selects move
-    // Will eventually have a computer AI that chooses smart moves or increased stats
-    // Determine turn based on speed or moves or abilities
-    // Execute move function
-    // Repeat until any pokemon faints.
+    if (target.tagName === "H1") {
+        moveId = Math.floor(target.getAttribute("moveId"));
+    } else {
+        for (let i = 0; i < target.childNodes.length; i++) {
+            if (target.childNodes[i].tagName === "H1") {
+                moveId = Math.floor(target.childNodes[i].getAttribute("moveId"));
+            }
+        }
+    }
 
-    // End Game Functionality
-    // Determine winner
-    // Ask to play again
+    const userPoke = pokeTeam[pokeBattleIdx];
+    const userMove = userPoke.moves.filter(x => x.id === moveId)[0];
 
-// };
+    // Right now, random move selection.
+    const oppPoke = trainerRedTeam[trainerBattleIdx];
+    const randomNum = Math.floor(Math.random() * 4);
+    const oppMove = oppPoke.moves[randomNum];
 
-// init();
+    console.log(oppMove);
+    console.log(userPoke);
+    attack(userMove, oppMove);
+};
+
+function attack(userMove, oppMove) {
+    const userPoke = pokeTeam[pokeBattleIdx];
+    const oppPoke = trainerRedTeam[trainerBattleIdx];
+
+    if (userPoke.stats.speed >= oppPoke.stats.speed) {
+        executeMove(userPoke, oppPoke, userMove);
+        executeMove(oppPoke, userPoke, oppMove);
+    } else {
+        executeMove(oppPoke, userPoke, oppMove);
+        executeMove(userPoke, oppPoke, userMove);
+    }
+};
+
+function executeMove(attacker, defender, move) {
+    const power = move.power;
+    let attack;
+    let defense;
+    if (move.damageClass === "physical") {
+        attack = attacker.stats.attack;
+        defense = defender.stats.defense;
+    } else {
+        attack = attacker.stats.special_attack;
+        defense = defender.stats.special_defense;
+    }
+    const level = attacker.level;
+    const moveType = move.type;
+    const attackTypes = attacker.types;
+    const defendTypes = defender.types;
+
+    let isCritical = 1;
+    let isSTAB = 1;
+    let typeMod = 1;
+    const critChance = Math.floor(Math.random() * 11);
+    const typeMatching = getTypeMatchingByType(moveType);
+
+    if (critChance >= 9) {
+        isCritical = 2;
+    }
+    if (attackTypes.includes(moveType)) {
+        isSTAB = 1.5;
+    }
+    for (let i = 0; i < defendTypes.length; i++) {
+        const type = defendTypes[i];
+        if (typeMatching.strong.includes(type)) {
+            typeMod = typeMod * 2;
+        } else if (typeMatching.weak.includes(type)) {
+            typeMod = typeMod * 0.5;
+        } else if (typeMatching.noEffect.includes(type)) {
+            typeMod = 0;
+        }
+    }
+
+    const modifier = isCritical * isSTAB * typeMod;
+    const baseDamage = ((((((level * 2) / 5) + 2) * power * (attack / defense)) / 50) + 2);
+
+    const damage = {
+        num: Math.round(baseDamage * modifier),
+        messages: []
+    }
+
+    if (isCritical === 2 && typeMod !== 0) {
+        damage.messages.push("Critical Hit!");
+    }
+    if (typeMod === 0.5) {
+        damage.messages.push("It's not very effective...")
+    }
+    if (typeMod === 0) {
+        damage.messages.push("It had no effect on " + capitlizeFirstLetter(defender.name))
+    }
+    if (typeMod >= 2) {
+        damage.messages.push("It's super effective!")
+    }
+    
+    move.pp--;
+    defender.stats.hp = defender.stats.hp - damage.num;
+    console.log(defender);
+    battleMenu();
+};
+
+function getTypeMatchingByType(type) {
+    switch (type) {
+        case "normal":
+            return {
+                strong: [],
+                weak: ["rock", "steel"],
+                noEffect: ["ghost"]
+            };
+        case "fighting":
+            return {
+                strong: ["normal", "rock", "steel", "ice", "dark"],
+                weak: ["flying", "poison", "bug", "pyschic"],
+                noEffect: ["ghost"]
+            };
+        case "flying":
+            return {
+                strong: ["fight", "bug", "grass"],
+                weak: ["rock", "steel", "electric"],
+                noEffect: []
+            };
+        case "poison":
+            return {
+                strong: ["grass"],
+                weak: ["poison", "ground", "rock", "ghsot"],
+                noEffect: ["steel"]
+            };
+        case "ground":
+            return {
+                strong: ["poison", "rock", "steel", "fire", "electric"],
+                weak: ["bug", "grass"],
+                noEffect: ["flying"]
+            };
+        case "rock":
+            return {
+                strong: ["flying", "bug", "fire", "ice"],
+                weak: ["fight", "ground", "steel"],
+                noEffect: []
+            };
+        case "bug":
+            return {
+                strong: ["grass", "psychic", "dark"],
+                weak: ["fight", "flying", "poison", "ghost", "steel", "fire"],
+                noEffect: []
+            };
+        case "ghost":
+            return {
+                strong: ["ghost", "psychic"],
+                weak: ["steel", "dark"],
+                noEffect: ["normal"]
+            };
+        case "steel":
+            return {
+                strong: ["rock", "ice"],
+                weak: ["steel", "fire", "water", "electric"],
+                noEffect: []
+            };
+        case "fire":
+            return {
+                strong: ["bug", "steel", "grass", "ice"],
+                weak: ["rock", "fire", "water", "dragon"],
+                noEffect: []
+            };
+        case "water":
+            return {
+                strong: ["ground", "rock", "fire"],
+                weak: ["water", "grass", "dragon"],
+                noEffect: []
+            };
+        case "grass":
+            return {
+                strong: ["ground", "rock", "water"],
+                weak: ["flying", "poison", "bug", "steel", "fire", "grass", "dragon"],
+                noEffect: []
+            };
+        case "electric":
+            return {
+                strong: ["flying", "water"],
+                weak: ["grass", "electric", "dragon"],
+                noEffect: ["ground"]
+            };
+        case "psychic":
+            return {
+                strong: ["fight", "poison"],
+                weak: ["steel", "psychic"],
+                noEffect: ["dark"]
+            };
+        case "ice":
+            return {
+                strong: ["flying", "ground", "grass", "dragon"],
+                weak: ["steel", "fire", "water", "ice"],
+                noEffect: []
+            };
+        case "dragon":
+            return {
+                strong: ["dragon"],
+                weak: ["steel"],
+                noEffect: []
+            };
+        case "dark":
+            return {
+                strong: ["ghost", "psychic"],
+                weak: ["fight", "steel", "dark"],
+                noEffect: []
+            };
+        case "fairy":
+            return {
+                strong: ["fighting", "dragon", "dark"],
+                weak: ["fire", "ground", "steel"],
+                noEffect: []
+            };
+        default:
+            break;
+    }
+};
+
+function endBattle(user, opp) {
+    console.log("Battle Ended");
+};
